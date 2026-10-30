@@ -1,0 +1,208 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verify Identity | SecureGate</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            font-family: Arial, sans-serif;
+            color: #f8fafc;
+            background: radial-gradient(circle at top, #172554, #020617 65%);
+        }
+
+        .card {
+            width: 100%;
+            max-width: 440px;
+            padding: 35px;
+            background: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 18px;
+            box-shadow: 0 20px 60px #0006;
+        }
+
+        .logo {
+            text-align: center;
+            font-size: 36px;
+            margin-bottom: 15px;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 25px;
+            margin-bottom: 12px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #94a3b8;
+            font-size: 14px;
+            line-height: 1.7;
+            margin-bottom: 25px;
+        }
+
+        .method {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 15px;
+            border: 1px solid #334155;
+            border-radius: 10px;
+            margin-bottom: 12px;
+            cursor: pointer;
+        }
+
+        .method:has(input:checked) {
+            border-color: #38bdf8;
+            background: #0c2740;
+        }
+
+        .method input {
+            margin-top: 4px;
+            accent-color: #38bdf8;
+        }
+
+        .method strong {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .method small {
+            color: #94a3b8;
+            line-height: 1.5;
+        }
+
+        label.code-label {
+            display: block;
+            margin: 22px 0 9px;
+            font-size: 14px;
+        }
+
+        input[name="code"] {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid #475569;
+            border-radius: 9px;
+            background: #020617;
+            color: white;
+            font-size: 22px;
+            letter-spacing: 6px;
+            text-align: center;
+            outline: none;
+        }
+
+        input[name="code"]:focus {
+            border-color: #38bdf8;
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            margin-top: 22px;
+            border: none;
+            border-radius: 9px;
+            background: #0ea5e9;
+            color: #00111c;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #38bdf8;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 22px;
+            color: #94a3b8;
+            font-size: 12px;
+        }
+
+        @media (max-width: 480px) {
+            .card {
+                padding: 24px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <main class="card">
+        <div class="logo">🔐</div>
+
+        <h1>Verify Your Identity</h1>
+
+        <p class="subtitle">
+            Your password is only the first step.
+            Complete your second verification to continue.
+        </p>
+
+        <form method="POST" action="{{ url_for('verify_mfa') }}">
+            <input
+                type="hidden"
+                name="csrf_token"
+                value="{{ csrf_token() }}"
+            >
+
+            <label class="method">
+                <input
+                    type="radio"
+                    name="method"
+                    value="email"
+                    required
+                    checked
+                >
+                <span>
+                    <strong>Email OTP</strong>
+                    <small>Verify using a one-time code sent to your email.</small>
+                </span>
+            </label>
+
+            <label class="method">
+                <input
+                    type="radio"
+                    name="method"
+                    value="authenticator"
+                    required
+                >
+                <span>
+                    <strong>Authenticator App</strong>
+                    <small>Use the time-based code from your authenticator app.</small>
+                </span>
+            </label>
+
+            <label class="code-label" for="code">6-digit verification code</label>
+            <input
+                id="code"
+                name="code"
+                type="text"
+                inputmode="numeric"
+                pattern="[0-9]{6}"
+                minlength="6"
+                maxlength="6"
+                autocomplete="one-time-code"
+                placeholder="000000"
+                required
+            >
+
+            <button type="submit">Verify & Continue</button>
+        </form>
+
+        <p class="footer">
+            SECUREGATE · MULTI-FACTOR AUTHENTICATION
+        </p>
+    </main>
+</body>
+</html>

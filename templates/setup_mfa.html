@@ -1,0 +1,261 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Set Up Authenticator | SecureGate</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            font-family: Arial, sans-serif;
+            color: #f8fafc;
+            background: radial-gradient(circle at top, #172554, #020617 65%);
+        }
+
+        .card {
+            width: 100%;
+            max-width: 470px;
+            padding: 32px;
+            background: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 18px;
+            box-shadow: 0 20px 60px #0006;
+        }
+
+        .logo {
+            text-align: center;
+            font-size: 34px;
+            margin-bottom: 12px;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 25px;
+            margin-bottom: 12px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #94a3b8;
+            font-size: 14px;
+            line-height: 1.7;
+            margin-bottom: 25px;
+        }
+
+        .steps {
+            padding: 18px;
+            border: 1px solid #334155;
+            border-radius: 12px;
+            background: #020617;
+        }
+
+        .steps h2 {
+            font-size: 16px;
+            margin-bottom: 14px;
+        }
+
+        .step {
+            display: flex;
+            gap: 12px;
+            margin: 13px 0;
+            color: #cbd5e1;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .number {
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            background: #075985;
+            color: white;
+            font-weight: bold;
+        }
+
+        .qr-container {
+            text-align: center;
+            margin: 24px 0;
+        }
+
+        .qr-container img {
+            width: 210px;
+            max-width: 100%;
+            padding: 10px;
+            background: white;
+            border-radius: 12px;
+        }
+
+        .qr-label {
+            margin-bottom: 12px;
+            color: #cbd5e1;
+            font-size: 14px;
+        }
+
+        .verify-form {
+            margin-top: 24px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 9px;
+            font-size: 14px;
+            color: #cbd5e1;
+        }
+
+        input {
+            width: 100%;
+            padding: 13px;
+            border: 1px solid #475569;
+            border-radius: 9px;
+            background: #020617;
+            color: white;
+            font-size: 18px;
+            letter-spacing: 5px;
+            text-align: center;
+        }
+
+        button {
+            width: 100%;
+            margin-top: 14px;
+            padding: 13px;
+            border: none;
+            border-radius: 9px;
+            background: #0284c7;
+            color: white;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #0369a1;
+        }
+
+        .notice {
+            margin-top: 18px;
+            padding: 13px;
+            border-radius: 9px;
+            background: #422006;
+            color: #fde68a;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .flash {
+            margin-bottom: 14px;
+            padding: 11px;
+            border-radius: 8px;
+            background: #422006;
+            color: #fde68a;
+            font-size: 14px;
+        }
+
+        a {
+            display: block;
+            text-align: center;
+            margin-top: 22px;
+            color: #38bdf8;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 480px) {
+            .card {
+                padding: 23px 18px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <main class="card">
+        <div class="logo">🔐</div>
+        <h1>Set Up Authenticator</h1>
+
+        <p class="subtitle">
+            Add a second layer of protection to your SecureGate account.
+        </p>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% for category, message in messages %}
+                <div class="flash">{{ message }}</div>
+            {% endfor %}
+        {% endwith %}
+
+        <section class="steps">
+            <h2>How to connect your authenticator</h2>
+
+            <div class="step">
+                <span class="number">1</span>
+                <span>Open Google Authenticator or another compatible TOTP app.</span>
+            </div>
+
+            <div class="step">
+                <span class="number">2</span>
+                <span>Choose the option to add a new account.</span>
+            </div>
+
+            <div class="step">
+                <span class="number">3</span>
+                <span>Scan the QR code displayed below.</span>
+            </div>
+
+            <div class="step">
+                <span class="number">4</span>
+                <span>Enter the six-digit code from your authenticator app.</span>
+            </div>
+        </section>
+
+        <div class="qr-container">
+            <p class="qr-label">Scan this QR code with your authenticator app</p>
+            <img
+                src="data:image/png;base64,{{ qr_image }}"
+                alt="SecureGate authenticator setup QR code"
+            >
+        </div>
+
+        <form class="verify-form" method="POST" action="{{ url_for('confirm_mfa') }}">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+            <label for="code">Six-digit verification code</label>
+            <input
+                type="text"
+                id="code"
+                name="code"
+                inputmode="numeric"
+                pattern="[0-9]{6}"
+                minlength="6"
+                maxlength="6"
+                placeholder="000000"
+                autocomplete="one-time-code"
+                required
+            >
+
+            <button type="submit">Verify and Enable MFA</button>
+        </form>
+
+        <div class="notice">
+            Never share your authenticator codes or setup secret with anyone.
+        </div>
+
+        <a href="{{ url_for('dashboard') }}">Back to Dashboard</a>
+    </main>
+</body>
+</html>

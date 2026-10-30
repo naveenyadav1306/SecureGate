@@ -1,0 +1,195 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Account | SecureGate</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            font-family: Arial, sans-serif;
+            color: #f8fafc;
+            background: radial-gradient(circle at top, #172554, #020617 65%);
+        }
+
+        .card {
+            width: 100%;
+            max-width: 430px;
+            padding: 35px;
+            background: rgba(15, 23, 42, 0.94);
+            border: 1px solid #334155;
+            border-radius: 18px;
+            box-shadow: 0 20px 60px #0006;
+        }
+
+        .logo {
+            text-align: center;
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 25px;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #94a3b8;
+            text-align: center;
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            font-size: 14px;
+            margin: 17px 0 8px;
+        }
+
+        input {
+            width: 100%;
+            padding: 13px;
+            border: 1px solid #475569;
+            border-radius: 9px;
+            background: #020617;
+            color: white;
+            outline: none;
+        }
+
+        input:focus {
+            border-color: #38bdf8;
+            box-shadow: 0 0 0 3px #38bdf822;
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            margin-top: 24px;
+            border: none;
+            border-radius: 9px;
+            background: #0ea5e9;
+            color: #00111c;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #38bdf8;
+        }
+
+        .message {
+            padding: 11px;
+            border-radius: 8px;
+            margin: 12px 0;
+            font-size: 14px;
+            overflow-wrap: anywhere;
+        }
+
+        .error {
+            background: #451a1a;
+            color: #fecaca;
+        }
+
+        .success {
+            background: #052e25;
+            color: #a7f3d0;
+        }
+
+        .footer {
+            margin-top: 22px;
+            text-align: center;
+            font-size: 12px;
+            color: #94a3b8;
+        }
+
+        @media (max-width: 480px) {
+            .card {
+                padding: 24px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <main class="card">
+        <div class="logo">🛡️</div>
+        <h1>Create Your Account</h1>
+        <p class="subtitle">
+            Welcome to SecureGate. Protect your account
+            with secure authentication.
+        </p>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% for category, message in messages %}
+                <div class="message {{ category }}" role="alert">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endwith %}
+
+        <form method="POST" action="{{ url_for('register') }}">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+            <label for="username">Username</label>
+            <input
+                id="username"
+                name="username"
+                type="text"
+                minlength="3"
+                maxlength="80"
+                autocomplete="username"
+                required
+            >
+
+            <label for="email">Email Address</label>
+            <input
+                id="email"
+                name="email"
+                type="email"
+                maxlength="254"
+                autocomplete="email"
+                required
+            >
+
+            <label for="password">Password</label>
+            <input
+                id="password"
+                name="password"
+                type="password"
+                minlength="12"
+                autocomplete="new-password"
+                required
+            >
+
+            <label for="confirm_password">Confirm Password</label>
+            <input
+                id="confirm_password"
+                name="confirm_password"
+                type="password"
+                minlength="12"
+                autocomplete="new-password"
+                required
+            >
+
+            <button type="submit">Create Secure Account</button>
+        </form>
+
+        <p class="footer">
+            SECUREGATE · MULTI-FACTOR AUTHENTICATION
+        </p>
+    </main>
+</body>
+</html>

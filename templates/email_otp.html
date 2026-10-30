@@ -1,0 +1,176 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Verification | SecureGate</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            font-family: Arial, sans-serif;
+            color: #f8fafc;
+            background: radial-gradient(circle at top, #172554, #020617 65%);
+        }
+
+        .card {
+            width: 100%;
+            max-width: 430px;
+            padding: 34px;
+            background: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 18px;
+            box-shadow: 0 20px 60px #0006;
+        }
+
+        .logo {
+            text-align: center;
+            font-size: 38px;
+            margin-bottom: 15px;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 25px;
+            margin-bottom: 12px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #94a3b8;
+            font-size: 14px;
+            line-height: 1.7;
+            margin-bottom: 25px;
+        }
+
+        .message {
+            padding: 11px;
+            border-radius: 8px;
+            margin: 12px 0;
+            font-size: 14px;
+            overflow-wrap: anywhere;
+        }
+
+        .error {
+            background: #451a1a;
+            color: #fecaca;
+        }
+
+        .success {
+            background: #052e25;
+            color: #a7f3d0;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+
+        input[name="code"] {
+            width: 100%;
+            padding: 15px;
+            border: 1px solid #475569;
+            border-radius: 9px;
+            background: #020617;
+            color: white;
+            font-size: 23px;
+            letter-spacing: 7px;
+            text-align: center;
+            outline: none;
+        }
+
+        input[name="code"]:focus {
+            border-color: #38bdf8;
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            margin-top: 22px;
+            border: none;
+            border-radius: 9px;
+            background: #0ea5e9;
+            color: #00111c;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #38bdf8;
+        }
+
+        .note {
+            text-align: center;
+            margin-top: 20px;
+            color: #94a3b8;
+            font-size: 12px;
+            line-height: 1.7;
+        }
+
+        @media (max-width: 480px) {
+            .card {
+                padding: 24px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <main class="card">
+        <div class="logo">📧</div>
+        <h1>Verify Your Email</h1>
+
+        <p class="subtitle">
+            Enter the six-digit verification code sent to your registered email.
+        </p>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% for category, message in messages %}
+                <div class="message {{ category }}" role="alert">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endwith %}
+
+        <form method="POST" action="{{ url_for('verify_email_otp') }}">
+            <input
+                type="hidden"
+                name="csrf_token"
+                value="{{ csrf_token() }}"
+            >
+
+            <label for="code">6-digit email OTP</label>
+            <input
+                id="code"
+                name="code"
+                type="text"
+                inputmode="numeric"
+                pattern="[0-9]{6}"
+                minlength="6"
+                maxlength="6"
+                autocomplete="one-time-code"
+                placeholder="000000"
+                required
+            >
+
+            <button type="submit">Verify Email Code</button>
+        </form>
+
+        <p class="note">
+            Never share your OTP with anyone.<br>
+            SECUREGATE · EMAIL SECURITY
+        </p>
+    </main>
+</body>
+</html>
